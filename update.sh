@@ -3,9 +3,13 @@
 GREEN="\e[32m"
 RED="\e[31m"
 RESET="\e[0m"
-
+LOG_DIR="/var/log/apt/info_actualizacion"
+LOG_FILE="$LOG_DIR/informe.txt"
 
 echo -e "${GREEN}        -----------------LINUX UPGRADE -----------------------${GREEN}"
+echo "   DEBES EJECUTAR ESTE SCRIPT COMO SUPER-USUARIO, MAS ADELANTE TE QUITARÉ ESE PASO :3, SI NO ES ASI, VUELVE A EJECUTAR EL SCRIPT COMO 
+   CON SUPER-USUARIO   " 
+echo ""
 echo -e "${GREEN}     ¿DESEA ACTUALIZAR TODO LOS PAQUETES Y REPOSITORIOS?     ${RESET}"
 
 echo "[Y] Si"
@@ -24,14 +28,18 @@ then
     case $option2 in 
         [yY])
             clear
-            echo "            Ok! INICIADO ACTUALIZACIÓN                "
+            echo "                  Ok! INICIADO ACTUALIZACIÓN                "
             sudo apt update -y
-            sudo apt full-upgrade -y &> informe.txt
+            mkdir /var/log/apt/info_actualizacion
+            sudo apt full-upgrade -y &> $LOG_FILE
             if sudo apt full-upgrade -y | grep -q "0 actualizados, 0 nuevos se instalarán, 0 para eliminar y 0 no actualizados."
             then
+                #clear
                 echo -e "${RED}     ---- SIN ACTUALIZACIONES DISPONIBLES --- ${RESET}"
+                echo "       INFORME GUARDADO EN LA CARPETA /var/log/apt                   "
             else
                 echo "${GREEN}      --- SISTEMA ACTUALIZADO CON EXITO ---    ${RESET}"
+                echo "       INFORME GUARDADO EN LA CARPETA /var/log/apt                   "
             fi
             ;;
         [nN])
